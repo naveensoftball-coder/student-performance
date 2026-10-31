@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Registration | Student Performance with Prediction</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="student-theme-register text-slate-800 h-screen overflow-hidden flex selection:bg-blue-600 selection:text-white relative">
+
+  <!-- Ambient Glowing Glass Orbs (Refract through frosted glass) -->
+  <div class="glass-orb glass-orb-1"></div>
+  <div class="glass-orb glass-orb-2"></div>
+  <div class="glass-orb glass-orb-4"></div>
+
+  <!-- Sidebar Backdrop Overlay -->
+  <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden transition-opacity duration-300"></div>
+
+  <!-- Left Sidebar (Side panel opened by 3 small lines button) -->
+  <aside id="sidebar" class="dashboard-sidebar w-64 h-screen fixed inset-y-0 left-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between shrink-0 no-print overflow-y-auto shadow-2xl p-5">
+    
+    <div>
+      <!-- Brand Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <a href="dashboard.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+          </div>
+          <span class="font-bold text-white text-sm tracking-tight font-heading leading-tight">
+            Student Performance <br><span class="text-blue-400">with Prediction</span>
+          </span>
+        </a>
+        <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" title="Close Side Panel">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Quick Navigation in Side Panel -->
+      <nav class="mt-4 space-y-1.5 text-xs font-medium">
+        <a href="login.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="log-in" class="w-4 h-4 text-emerald-400"></i>
+          <span>Login Page</span>
+        </a>
+        <a href="admin.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+          <span>Admin Portal</span>
+        </a>
+        <a href="dashboard.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 text-purple-400"></i>
+          <span>Student Dashboard</span>
+        </a>
+        <a href="index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="globe" class="w-4 h-4 text-blue-400"></i>
+          <span>Landing Overview</span>
+        </a>
+      </nav>
+
+      <!-- Student Onboarding Lifecycle Diagram in Side Panel -->
+      <div class="mt-4 p-3 rounded-xl bg-slate-800/60 border border-slate-700/80 text-xs">
+        <div class="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <i data-lucide="git-commit" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Student Journey Diagram</span>
+        </div>
+        <div class="space-y-1.5 text-[11px]">
+          <div class="flex items-center gap-2 text-slate-300">
+            <span class="w-5 h-5 rounded-full bg-blue-600/30 border border-blue-500 text-blue-400 flex items-center justify-center font-bold text-[10px] shrink-0">1</span>
+            <span>Create Candidate Profile</span>
+          </div>
+          <div class="w-0.5 h-1.5 bg-blue-500/40 ml-2.5"></div>
+          <div class="flex items-center gap-2 text-slate-300">
+            <span class="w-5 h-5 rounded-full bg-indigo-600/30 border border-indigo-500 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">2</span>
+            <span>Log Study Hours & Attendance</span>
+          </div>
+          <div class="w-0.5 h-1.5 bg-indigo-500/40 ml-2.5"></div>
+          <div class="flex items-center gap-2 text-slate-300">
+            <span class="w-5 h-5 rounded-full bg-emerald-600/30 border border-emerald-500 text-emerald-400 flex items-center justify-center font-bold text-[10px] shrink-0">3</span>
+            <span>Compute Predictions & Roadmap</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Info Card (Replaces Home navigation) -->
+      <div class="mt-4 p-3.5 rounded-xl bg-slate-800/50 border border-slate-800 text-xs text-slate-400 space-y-2">
+        <div class="flex items-center gap-2 text-blue-400 font-semibold">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span>Registration Portal</span>
+        </div>
+        <p class="leading-relaxed text-[11px]">
+          Create your candidate account to unlock semester analysis, GPA forecasts, and AI study roadmaps.
+        </p>
+      </div>
+    </div>
+
+    <!-- Student Studying Illustration at bottom of sidebar -->
+    <div class="pt-4 border-t border-slate-800/80 text-center">
+      <svg class="w-28 h-20 mx-auto" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="100" width="120" height="4" rx="2" fill="#334155"/>
+        <rect x="25" y="86" width="30" height="6" rx="2" fill="#3B82F6"/>
+        <rect x="27" y="80" width="26" height="6" rx="2" fill="#1D4ED8"/>
+        <rect x="65" y="60" width="45" height="30" rx="3" fill="#1E293B"/>
+        <rect x="68" y="63" width="39" height="24" rx="2" fill="#38BDF8"/>
+        <circle cx="85" cy="30" r="11" fill="#F87171"/>
+        <path d="M78 23C78 23 85 18 92 23C92 23 94 31 85 32C79 32 78 23 78 23Z" fill="#0F172A"/>
+        <path d="M73 45C73 41 78 39 85 39C92 39 97 41 97 45V68H73V45Z" fill="#2563EB"/>
+      </svg>
+      <div class="text-[11px] text-slate-400 font-medium mt-1">
+        Your effort + Our AI = Better Results
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Right Main Area -->
+  <div class="flex-grow flex flex-col h-screen overflow-y-auto w-full">
+    
+    <!-- Top Bar with 3 small lines button & Dark Mode Toggle -->
+    <header class="bg-white border-b border-slate-200 h-13 sm:h-14 px-4 sm:px-8 py-2.5 flex items-center justify-between shrink-0">
+      
+      <div class="flex items-center gap-3">
+        <!-- Three small lines (hamburger menu) to open side panel -->
+        <button 
+          onclick="toggleSidebar()" 
+          class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer border border-slate-200 dark:border-slate-700 shadow-2xs group"
+          title="Open Side Navigation Menu"
+        >
+          <i data-lucide="menu" class="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform"></i>
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-600 hidden sm:inline">Menu</span>
+        </button>
+
+        <div class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+          <i data-lucide="user-check" class="w-4 h-4 text-blue-600"></i>
+          <span>Candidate Registration Portal</span>
+        </div>
+      </div>
+
+      <!-- Dark Mode Toggle Button -->
+      <div class="flex items-center gap-3">
+        <!-- SQLite Database Status Badge -->
+        <span class="sqlite-status-badge hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shadow-2xs" title="SQLite Database: student_performance.db">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span>SQLite: Local Cache</span>
+        </span>
+
+        <button 
+          onclick="ThemeManager.toggle()" 
+          class="theme-toggle-btn"
+          title="Toggle Light / Dark Mode"
+        >
+          <i data-lucide="moon" class="w-4 h-4 text-slate-700"></i>
+          <span class="hidden sm:inline">Dark</span>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- Main Registration Card Container (Fit to screen above task bar) -->
+    <main class="flex-grow flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto relative">
+      
+      <!-- Decorative Floating Student Elements in Background -->
+      <div class="absolute top-5 left-8 hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-slate-200/60 dark:border-slate-700/60 shadow-xs text-xs font-semibold text-slate-600 dark:text-slate-300 pointer-events-none">
+        <span>🎓 Student Enrollment Portal</span>
+      </div>
+      <div class="absolute bottom-5 right-8 hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-slate-200/60 dark:border-slate-700/60 shadow-xs text-xs font-semibold text-slate-600 dark:text-slate-300 pointer-events-none">
+        <span>📊 ML Calibrated Predictor</span>
+      </div>
+
+      <div class="w-full max-w-2xl my-auto relative z-10">
+        
+        <div class="clean-card bg-white p-4 sm:p-5 rounded-2xl shadow-lg border border-slate-200">
+          
+          <div class="pb-2 mb-2.5 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h1 class="text-base sm:text-lg font-bold text-slate-900 font-heading">
+                Candidate Registration
+              </h1>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                Fill in your academic profile to initialize your dashboard.
+              </p>
+            </div>
+            <span class="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+              Step 1 of 1
+            </span>
+          </div>
+
+          <!-- Single Registration Form (Compact & Screen Fit) -->
+          <form id="candidateRegistrationForm" onsubmit="handleRegister(event)" class="space-y-2 text-xs sm:text-sm">
+            
+            <!-- Row 1: Candidate ID & Full Name -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="candidateId" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Candidate ID / Roll No <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="candidateId" 
+                  required 
+                  placeholder="e.g. CAND2026" 
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+
+              <div>
+                <label for="fullName" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Full Name <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  required 
+                  placeholder="e.g. Rahul Sharma" 
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+            </div>
+
+            <!-- Row 2: Email & Mobile Number -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="email" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Email Address <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  required 
+                  placeholder="e.g. student@college.edu" 
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+
+              <div>
+                <label for="mobile" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Mobile Number <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="tel" 
+                  id="mobile" 
+                  required 
+                  placeholder="e.g. 9876543210" 
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+            </div>
+
+            <!-- Row 3: College Name & Course -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="collegeName" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  College Name
+                </label>
+                <input 
+                  type="text" 
+                  id="collegeName" 
+                  required 
+                  placeholder="e.g. ALTS" 
+                  value="ALTS"
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+
+              <div>
+                <label for="course" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Course
+                </label>
+                <select id="course" class="w-full px-3 py-2 rounded-lg form-input-clean cursor-pointer text-xs sm:text-sm">
+                  <option value="B.Tech" selected>B.Tech</option>
+                  <option value="BCA">BCA</option>
+                  <option value="MCA">MCA</option>
+                  <option value="B.Sc">B.Sc</option>
+                  <option value="M.Tech">M.Tech</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 4: Branch & Gender -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="branch" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Branch
+                </label>
+                <select id="branch" class="w-full px-3 py-2 rounded-lg form-input-clean cursor-pointer text-xs sm:text-sm">
+                  <option value="Computer Science" selected>Computer Science</option>
+                  <option value="Artificial Intelligence & DS">Artificial Intelligence & DS</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Electronics Engineering">Electronics Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="gender" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Gender
+                </label>
+                <select id="gender" class="w-full px-3 py-2 rounded-lg form-input-clean cursor-pointer text-xs sm:text-sm">
+                  <option value="Male" selected>Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 5: Semester (1st & 2nd Sem) & Year of Study -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="semester" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Semester
+                </label>
+                <select id="semester" onchange="syncSemesterToYear()" class="w-full px-3 py-2 rounded-lg form-input-clean cursor-pointer text-xs sm:text-sm">
+                  <option value="1st Sem" selected>1st Sem</option>
+                  <option value="2nd Sem">2nd Sem</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="yearOfStudy" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Year of Study
+                </label>
+                <select id="yearOfStudy" onchange="syncYearToSemester()" class="w-full px-3 py-2 rounded-lg form-input-clean cursor-pointer text-xs sm:text-sm">
+                  <option value="1st Year" selected>1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Profile Avatar Picker in Registration -->
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block font-semibold text-slate-700 text-xs flex items-center gap-1.5">
+                  <i data-lucide="smile" class="w-3.5 h-3.5 text-blue-600"></i>
+                  <span>Profile Avatar</span>
+                </label>
+                <span class="text-[10px] text-slate-500 font-medium">Click to choose avatar</span>
+              </div>
+              <div class="grid grid-cols-4 sm:grid-cols-8 gap-2" id="regAvatarGrid">
+                <!-- Avatars rendered via JS -->
+              </div>
+              <input type="hidden" id="selectedAvatar" value="images/avatars/avatar-1.svg">
+            </div>
+
+            <!-- Hidden defaults for academic metrics -->
+            <input type="hidden" id="attendance" value="85">
+            <input type="hidden" id="studyHours" value="4">
+            <input type="hidden" id="previousScore" value="78">
+
+            <!-- Row 6: Password & Confirm Password -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="password" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Password <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="password" 
+                  id="password" 
+                  required 
+                  placeholder="Create a password" 
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+
+              <div>
+                <label for="confirmPassword" class="block font-semibold text-slate-700 mb-0.5 text-xs">
+                  Confirm Password <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  required 
+                  placeholder="Re-enter password" 
+                  class="w-full px-3 py-2 rounded-lg form-input-clean text-xs sm:text-sm"
+                >
+              </div>
+            </div>
+
+            <!-- Single Register Button -->
+            <div class="pt-2">
+              <button 
+                type="submit" 
+                id="registerBtn"
+                class="w-full py-2.5 px-4 rounded-xl btn-primary-blue font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2"
+              >
+                <span>Register</span>
+              </button>
+            </div>
+
+            <!-- Single Login Link -->
+            <div class="text-center pt-1 text-xs text-slate-500">
+              Already have an account? 
+              <a href="login.html" class="text-blue-600 font-bold hover:underline">
+                Login
+              </a>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="js/ml-predictor.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    lucide.createIcons();
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function syncSemesterToYear() {
+      const sem = document.getElementById('semester')?.value;
+      const yearSelect = document.getElementById('yearOfStudy');
+      if (!sem || !yearSelect) return;
+      if (sem.startsWith('1st') || sem.startsWith('2nd')) {
+        yearSelect.value = '1st Year';
+      } else if (sem.startsWith('3rd') || sem.startsWith('4th')) {
+        yearSelect.value = '2nd Year';
+      } else if (sem.startsWith('5th') || sem.startsWith('6th')) {
+        yearSelect.value = '3rd Year';
+      } else if (sem.startsWith('7th') || sem.startsWith('8th')) {
+        yearSelect.value = '4th Year';
+      }
+    }
+
+    function syncYearToSemester() {
+      const year = document.getElementById('yearOfStudy')?.value;
+      const semSelect = document.getElementById('semester');
+      if (!year || !semSelect) return;
+      if (year === '1st Year') {
+        semSelect.innerHTML = `<option value="1st Sem" selected>1st Sem</option><option value="2nd Sem">2nd Sem</option>`;
+      } else if (year === '2nd Year') {
+        semSelect.innerHTML = `<option value="3rd Sem" selected>3rd Sem</option><option value="4th Sem">4th Sem</option>`;
+      } else if (year === '3rd Year') {
+        semSelect.innerHTML = `<option value="5th Sem" selected>5th Sem</option><option value="6th Sem">6th Sem</option>`;
+      } else if (year === '4th Year') {
+        semSelect.innerHTML = `<option value="7th Sem" selected>7th Sem</option><option value="8th Sem">8th Sem</option>`;
+      }
+    }
+
+    function recalcRegisterAverage() {
+      return 78.0;
+    }
+
+    function renderRegAvatars() {
+      const grid = document.getElementById('regAvatarGrid');
+      if (!grid || !AppStore.AVAILABLE_AVATARS) return;
+      const current = document.getElementById('selectedAvatar')?.value || 'images/avatars/avatar-1.svg';
+      grid.innerHTML = AppStore.AVAILABLE_AVATARS.map(av => {
+        const isSelected = av.path === current;
+        return `
+          <button 
+            type="button" 
+            onclick="selectRegAvatar('${av.path}')" 
+            class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 transition-transform cursor-pointer hover:scale-110 ${
+              isSelected 
+                ? 'border-blue-600 ring-2 ring-blue-500 shadow-sm scale-105' 
+                : 'border-slate-200 opacity-75 hover:opacity-100'
+            }"
+            title="${av.name}"
+          >
+            <img src="${av.path}" class="w-full h-full object-cover" alt="${av.name}">
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectRegAvatar(path) {
+      const hidden = document.getElementById('selectedAvatar');
+      if (hidden) hidden.value = path;
+      renderRegAvatars();
+    }
+
+    // Initialize avatars on load
+    renderRegAvatars();
+
+    function handleRegister(e) {
+      e.preventDefault();
+      
+      const pwd = document.getElementById('password').value;
+      const confirmPwd = document.getElementById('confirmPassword').value;
+
+      if (pwd !== confirmPwd) {
+        alert('Passwords do not match. Please verify.');
+        return;
+      }
+
+      const gender = document.getElementById('gender')?.value || 'Male';
+      const semester = document.getElementById('semester')?.value || '1st Sem';
+      const yearOfStudy = document.getElementById('yearOfStudy')?.value || '1st Year';
+      const avatar = document.getElementById('selectedAvatar')?.value || 'images/avatars/avatar-1.svg';
+
+      const userData = {
+        candidateId: document.getElementById('candidateId').value.trim(),
+        fullName: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        mobile: document.getElementById('mobile').value.trim(),
+        collegeName: document.getElementById('collegeName').value.trim(),
+        course: document.getElementById('course').value,
+        branch: document.getElementById('branch').value,
+        gender: gender,
+        semester: semester,
+        yearOfStudy: yearOfStudy,
+        avatar: avatar,
+        password: pwd,
+        previousScore: 78.0,
+        attendance: parseFloat(document.getElementById('attendance')?.value) || 85,
+        studyHours: parseFloat(document.getElementById('studyHours')?.value) || 4,
+        extracurricular: 'Medium'
+      };
+
+      const btn = document.getElementById('registerBtn');
+      btn.innerHTML = '<span>Registering Candidate...</span>';
+      btn.disabled = true;
+
+      // Register candidate into cohort list without auto-login (forces login every time)
+      AppStore.registerUser(userData);
+      Toast.show('Registration successful! Please login with your credentials to continue.', 'success');
+
+      setTimeout(() => {
+        sessionStorage.setItem('spp_registered_email', userData.email);
+        window.location.href = 'login.html';
+      }, 700);
+    }
+  </script>
+</body>
+</html>

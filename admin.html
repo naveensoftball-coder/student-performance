@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrator Portal | Student Performance Prediction</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="student-theme-dashboard text-slate-800 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white relative">
+
+  <!-- Ambient Glowing Glass Orbs (Refract through frosted glass) -->
+  <div class="glass-orb glass-orb-1"></div>
+  <div class="glass-orb glass-orb-2"></div>
+  <div class="glass-orb glass-orb-3"></div>
+  <div class="glass-orb glass-orb-4"></div>
+
+  <!-- Sidebar Backdrop Overlay -->
+  <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden transition-opacity duration-300"></div>
+
+  <!-- Left Sidebar Navigation Drawer -->
+  <aside id="sidebar" class="dashboard-sidebar w-64 h-screen fixed inset-y-0 left-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between shrink-0 no-print overflow-y-auto shadow-2xl p-5">
+    <div>
+      <!-- Brand Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <a href="admin.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <span class="font-bold text-white text-sm tracking-tight font-heading leading-tight">
+            Administrator <br><span class="text-indigo-400">Portal & Analytics</span>
+          </span>
+        </a>
+        <button onclick="toggleSidebar()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors" title="Close Side Panel">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Quick Navigation in Side Panel -->
+      <nav class="mt-4 space-y-1.5 text-xs font-medium">
+        <button onclick="scrollToSection('cohortOverview'); toggleSidebar();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-indigo-600/20 text-indigo-400 font-semibold border border-indigo-500/30 text-left">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span>Cohort Overview</span>
+        </button>
+        <button onclick="scrollToSection('studentsTableSection'); toggleSidebar();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-left">
+          <i data-lucide="users" class="w-4 h-4 text-blue-400"></i>
+          <span>Students & Predictions</span>
+        </button>
+        <button onclick="scrollToSection('notificationsSection'); toggleSidebar();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-left">
+          <i data-lucide="bell" class="w-4 h-4 text-amber-400"></i>
+          <span>Notifications & Reactions</span>
+        </button>
+        <button onclick="scrollToSection('analyticsChartsSection'); toggleSidebar();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-left">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400"></i>
+          <span>Performance Analytics</span>
+        </button>
+        <button onclick="scrollToSection('studentsTableSection'); toggleSidebar();" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors text-left">
+          <i data-lucide="filter" class="w-4 h-4 text-indigo-400"></i>
+          <span>Attendance & Marks Filter</span>
+        </button>
+        <a href="index.html" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
+          <span>Home / Index</span>
+        </a>
+      </nav>
+
+      <!-- Admin Identity Card in Sidebar -->
+      <div class="mt-6 p-3.5 rounded-xl bg-slate-800/60 border border-slate-700/80 text-xs">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0" id="sidebarAdminAvatar">
+            AD
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="font-bold text-white text-xs truncate" id="sidebarAdminName">Administrator</div>
+            <div class="text-[10px] text-indigo-300 truncate" id="sidebarAdminRole">Chief Administrator</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Logout -->
+    <div class="pt-4 border-t border-slate-800/80">
+      <button onclick="handleAdminLogout()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors text-xs font-semibold">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        <span>Sign Out Administrator</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Top Bar -->
+  <header class="bg-white border-b border-slate-200 h-14 sm:h-16 px-4 sm:px-8 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-xs shrink-0">
+    <div class="flex items-center gap-3">
+      <!-- 3 Small Lines Hamburger Menu Button -->
+      <button 
+        onclick="toggleSidebar()" 
+        class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-indigo-50 dark:text-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer border border-slate-200 dark:border-slate-700 shadow-2xs group"
+        title="Open Side Navigation Menu"
+      >
+        <i data-lucide="menu" class="w-5 h-5 text-indigo-600 group-hover:scale-110 transition-transform"></i>
+        <span class="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 hidden sm:inline">Menu</span>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-heading">
+          Institutional Administrator Portal
+        </span>
+        <span class="hidden md:inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+          Cohort 2025–26
+        </span>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <!-- Attendance Filter Quick Button -->
+      <button 
+        onclick="scrollToSection('studentsTableSection'); toggleAttendanceDropdown();" 
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shadow-2xs transition-all cursor-pointer"
+        title="Filter cohort by Attendance"
+      >
+        <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-indigo-600"></i>
+        <span>Attendance</span>
+      </button>
+
+      <!-- Marks Filter Quick Button -->
+      <button 
+        onclick="scrollToSection('studentsTableSection'); toggleMarksDropdown();" 
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-700 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shadow-2xs transition-all cursor-pointer"
+        title="Filter cohort by Marks"
+      >
+        <i data-lucide="award" class="w-3.5 h-3.5 text-amber-600"></i>
+        <span>Marks</span>
+      </button>
+
+      <!-- Send Notification Quick Button -->
+      <button 
+        onclick="openBroadcastModal()"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all"
+      >
+        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        <span class="hidden sm:inline">Send Notification</span>
+      </button>
+
+      <!-- SQLite Database Status Badge -->
+      <span class="sqlite-status-badge inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 shadow-2xs" title="SQLite Database: student_performance.db">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+        <span>SQLite: Local Cache</span>
+      </span>
+
+      <!-- Dark Mode Toggle Button -->
+      <button 
+        onclick="ThemeManager.toggle()" 
+        class="theme-toggle-btn"
+        title="Toggle Light / Dark Mode"
+      >
+        <i data-lucide="moon" class="w-4 h-4 text-slate-700"></i>
+        <span class="hidden sm:inline">Dark</span>
+      </button>
+
+      <!-- Admin Profile Pill -->
+      <div class="flex items-center gap-2 pl-2 sm:border-l border-slate-200 dark:border-slate-700">
+        <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs" id="topAdminAvatar">
+          AD
+        </div>
+        <div class="hidden lg:block text-left leading-tight">
+          <div class="text-xs font-bold text-slate-900 dark:text-white" id="topAdminName">Administrator</div>
+          <div class="text-[10px] text-slate-500" id="topAdminRole">Administrator</div>
+        </div>
+        <button onclick="handleAdminLogout()" class="p-1 text-slate-400 hover:text-rose-600 transition-colors ml-1" title="Sign Out">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8 z-10 relative">
+
+    <!-- ================================================================= -->
+    <!-- SECTION 1: COHORT OVERVIEW & KPIS                                 -->
+    <!-- ================================================================= -->
+    <section id="cohortOverview">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-heading">
+            Cohort Performance & Intervention Dashboard
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Monitor real-time academic predictions, identify at-risk students, and broadcast targeted mentorship alerts.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] font-mono text-slate-500 bg-white/70 dark:bg-slate-800/70 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-2xs">
+            Live Records Synced
+          </span>
+        </div>
+      </div>
+
+      <!-- 4 KPI Glass Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Total Students -->
+        <div class="clean-card p-5 rounded-2xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0 border border-blue-500/20">
+            <i data-lucide="users" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Enrolled</div>
+            <div class="text-2xl font-extrabold text-slate-900 dark:text-white font-heading" id="kpiTotalStudents">6</div>
+            <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-0.5 mt-0.5">
+              <span>● Active academic profiles</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cohort Avg Predicted Score -->
+        <div class="clean-card p-5 rounded-2xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-500/20">
+            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Cohort Avg Prediction</div>
+            <div class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-heading" id="kpiAvgPredicted">77.0%</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">ML calibrated GPA band</div>
+          </div>
+        </div>
+
+        <!-- Average Attendance -->
+        <div class="clean-card p-5 rounded-2xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-500/20">
+            <i data-lucide="calendar-check" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Class Attendance</div>
+            <div class="text-2xl font-extrabold text-slate-900 dark:text-white font-heading" id="kpiAvgAttendance">81.0%</div>
+            <div class="text-[10px] text-slate-500 mt-0.5">Threshold benchmark: 75%</div>
+          </div>
+        </div>
+
+        <!-- At-Risk Count (Interactive Filter) -->
+        <div class="clean-card p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:border-rose-300 transition-colors" onclick="filterByBand('At Risk')">
+          <div class="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0 border border-rose-500/20">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="text-[11px] font-semibold text-rose-700 dark:text-rose-400 uppercase tracking-wider">At-Risk Students</div>
+            <div class="text-2xl font-extrabold text-rose-600 font-heading" id="kpiAtRiskCount">1</div>
+            <div class="text-[10px] text-rose-600 dark:text-rose-400 underline font-semibold mt-0.5">
+              Click to view intervention targets
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: NOTIFICATIONS & STUDENT REACTIONS                      -->
+    <!-- ================================================================= -->
+    <section id="notificationsSection" class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white font-heading flex items-center gap-2">
+            <i data-lucide="bell" class="w-5 h-5 text-indigo-600"></i>
+            <span>Institutional Broadcast Center & Student Reaction Tracker</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Broadcast academic notifications, attendance notices, and view real-time student acknowledgment reactions.
+          </p>
+        </div>
+
+        <button 
+          onclick="openBroadcastModal()"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all self-start sm:self-auto"
+        >
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Compose New Notification</span>
+        </button>
+      </div>
+
+      <!-- Notifications Grid / Cards -->
+      <div id="notificationsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically by renderNotifications() -->
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 3: ALL STUDENTS DIRECTORY & PERFORMANCE TABLE             -->
+    <!-- ================================================================= -->
+    <section id="studentsTableSection" class="space-y-4">
+      <div class="clean-card p-5 sm:p-6 rounded-2xl shadow-lg border border-slate-200">
+        
+        <!-- Table Header & Filter Bar -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-heading flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
+              <span>All Student Academic Records & Predictions</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Comprehensive list of all registered candidates with calculated ML predictions and risk status.
+            </p>
+          </div>
+
+          <!-- Controls: Search & Filters & Add Student -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <!-- Search -->
+            <div class="relative min-w-[170px]">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                <i data-lucide="search" class="w-3.5 h-3.5"></i>
+              </span>
+              <input 
+                type="text" 
+                id="searchStudentInput"
+                oninput="applyFilters()" 
+                placeholder="Search candidate or ID..." 
+                class="w-full pl-9 pr-3 py-1.5 rounded-xl form-input-clean text-xs"
+              >
+            </div>
+
+            <!-- Attendance Filter Button & Dropdown -->
+            <div class="relative" id="attendanceDropdownWrapper">
+              <button 
+                type="button" 
+                id="attendanceFilterBtn"
+                onclick="toggleAttendanceDropdown(event)"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-2xs transition-all cursor-pointer"
+                title="Filter cohort by attendance percentage"
+              >
+                <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-indigo-500"></i>
+                <span id="attendanceFilterBtnLabel">Attendance</span>
+                <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+              </button>
+              <div 
+                id="attendanceDropdownMenu" 
+                class="hidden absolute left-0 mt-1.5 w-56 rounded-2xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700 py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+              >
+                <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-1">
+                  <span>Attendance Filter</span>
+                  <button type="button" onclick="setAttendanceFilter('all')" class="text-indigo-600 hover:underline capitalize text-[10px]">Reset</button>
+                </div>
+                <div class="space-y-0.5 text-xs">
+                  <button type="button" onclick="setAttendanceFilter('all')" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="font-medium">All Attendance</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-all"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('under90')" class="w-full text-left px-3 py-1.5 hover:bg-indigo-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Under 90%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-90"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('under80')" class="w-full text-left px-3 py-1.5 hover:bg-indigo-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Under 80%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-80"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('under70')" class="w-full text-left px-3 py-1.5 hover:bg-indigo-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Under 70%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-70"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('under60')" class="w-full text-left px-3 py-1.5 hover:bg-indigo-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-orange-500"></span>Under 60%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-60"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('under50')" class="w-full text-left px-3 py-1.5 hover:bg-indigo-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-400"></span>Under 50%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-50"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('under40')" class="w-full text-left px-3 py-1.5 hover:bg-indigo-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Under 40%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-att-40"></span>
+                  </button>
+                  <button type="button" onclick="setAttendanceFilter('below30')" class="w-full text-left px-3 py-1.5 hover:bg-rose-50 dark:hover:bg-slate-800 flex items-center justify-between text-rose-600 font-bold">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-600"></span>Below 30%</span>
+                    <span class="text-[10px] text-rose-500 font-mono" id="count-att-30"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Marks Filter Button & Dropdown -->
+            <div class="relative" id="marksDropdownWrapper">
+              <button 
+                type="button" 
+                id="marksFilterBtn"
+                onclick="toggleMarksDropdown(event)"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-2xs transition-all cursor-pointer"
+                title="Filter cohort by marks percentage"
+              >
+                <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i>
+                <span id="marksFilterBtnLabel">Marks</span>
+                <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+              </button>
+              <div 
+                id="marksDropdownMenu" 
+                class="hidden absolute left-0 mt-1.5 w-56 rounded-2xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700 py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+              >
+                <div class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-1">
+                  <span>Marks Filter</span>
+                  <button type="button" onclick="setMarksFilter('all')" class="text-amber-600 hover:underline capitalize text-[10px]">Reset</button>
+                </div>
+                <div class="space-y-0.5 text-xs">
+                  <button type="button" onclick="setMarksFilter('all')" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="font-medium">All Marks</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-all"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('under90')" class="w-full text-left px-3 py-1.5 hover:bg-amber-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Under 90%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-90"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('under80')" class="w-full text-left px-3 py-1.5 hover:bg-amber-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Under 80%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-80"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('under70')" class="w-full text-left px-3 py-1.5 hover:bg-amber-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Under 70%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-70"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('under60')" class="w-full text-left px-3 py-1.5 hover:bg-amber-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-orange-500"></span>Under 60%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-60"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('under50')" class="w-full text-left px-3 py-1.5 hover:bg-amber-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-400"></span>Under 50%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-50"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('under40')" class="w-full text-left px-3 py-1.5 hover:bg-amber-50/70 dark:hover:bg-slate-800 flex items-center justify-between text-slate-700 dark:text-slate-200">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Under 40%</span>
+                    <span class="text-[10px] text-slate-400 font-mono" id="count-marks-40"></span>
+                  </button>
+                  <button type="button" onclick="setMarksFilter('below30')" class="w-full text-left px-3 py-1.5 hover:bg-rose-50 dark:hover:bg-slate-800 flex items-center justify-between text-rose-600 font-bold">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-600"></span>Below 30%</span>
+                    <span class="text-[10px] text-rose-500 font-mono" id="count-marks-30"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Performance Filter -->
+            <select id="filterBand" onchange="applyFilters()" class="py-1.5 px-3 rounded-xl form-input-clean text-xs cursor-pointer">
+              <option value="all">All Predictions</option>
+              <option value="Good">Good (>= 80%)</option>
+              <option value="Average">Average (60 - 79%)</option>
+              <option value="At Risk">At Risk (< 60%)</option>
+            </select>
+
+            <!-- Department Filter -->
+            <select id="filterBranch" onchange="applyFilters()" class="py-1.5 px-3 rounded-xl form-input-clean text-xs cursor-pointer">
+              <option value="all">All Branches</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Artificial Intelligence & DS">Artificial Intelligence & DS</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics Engineering">Electronics Engineering</option>
+            </select>
+
+            <!-- Add Student to Database Button -->
+            <button 
+              onclick="openAddStudentModal()" 
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+              title="Add New Student to Database"
+            >
+              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+              <span>Add Student</span>
+            </button>
+
+            <!-- Refresh Button -->
+            <button onclick="renderAll()" class="p-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 transition-colors" title="Reload Records">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Clear Database Button -->
+            <button onclick="confirmClearDatabase()" class="flex items-center gap-1 px-2 py-1.5 rounded-xl border border-rose-200 text-rose-500 hover:bg-rose-50 text-[11px] transition-colors" title="Clear all students in database">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Clear All</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Filter Buttons Strip (Attendance & Marks: Under 90%, 80%, ... Below 30%) -->
+        <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-xs">
+          <!-- Attendance Quick Buttons -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-indigo-500"></i>
+              <span>Attendance:</span>
+            </span>
+            <div class="inline-flex rounded-xl bg-slate-100 dark:bg-slate-800/80 p-0.5 gap-0.5 border border-slate-200/60 dark:border-slate-700">
+              <button type="button" onclick="setAttendanceFilter('all')" id="pill-att-all" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-2xs">All</button>
+              <button type="button" onclick="setAttendanceFilter('under90')" id="pill-att-under90" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all">&lt; 90%</button>
+              <button type="button" onclick="setAttendanceFilter('under80')" id="pill-att-under80" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all">&lt; 80%</button>
+              <button type="button" onclick="setAttendanceFilter('under70')" id="pill-att-under70" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all">&lt; 70%</button>
+              <button type="button" onclick="setAttendanceFilter('under60')" id="pill-att-under60" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all">&lt; 60%</button>
+              <button type="button" onclick="setAttendanceFilter('under50')" id="pill-att-under50" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all">&lt; 50%</button>
+              <button type="button" onclick="setAttendanceFilter('under40')" id="pill-att-under40" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all">&lt; 40%</button>
+              <button type="button" onclick="setAttendanceFilter('below30')" id="pill-att-below30" class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-700 transition-all">&lt; 30%</button>
+            </div>
+          </div>
+
+          <!-- Marks Quick Buttons -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i>
+              <span>Marks:</span>
+            </span>
+            <div class="inline-flex rounded-xl bg-slate-100 dark:bg-slate-800/80 p-0.5 gap-0.5 border border-slate-200/60 dark:border-slate-700">
+              <button type="button" onclick="setMarksFilter('all')" id="pill-marks-all" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-400 shadow-2xs">All</button>
+              <button type="button" onclick="setMarksFilter('under90')" id="pill-marks-under90" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">&lt; 90%</button>
+              <button type="button" onclick="setMarksFilter('under80')" id="pill-marks-under80" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">&lt; 80%</button>
+              <button type="button" onclick="setMarksFilter('under70')" id="pill-marks-under70" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">&lt; 70%</button>
+              <button type="button" onclick="setMarksFilter('under60')" id="pill-marks-under60" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">&lt; 60%</button>
+              <button type="button" onclick="setMarksFilter('under50')" id="pill-marks-under50" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">&lt; 50%</button>
+              <button type="button" onclick="setMarksFilter('under40')" id="pill-marks-under40" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">&lt; 40%</button>
+              <button type="button" onclick="setMarksFilter('below30')" id="pill-marks-below30" class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-700 transition-all">&lt; 30%</button>
+            </div>
+          </div>
+
+          <!-- Active filters badge / clear all -->
+          <div id="activeFiltersSummary" class="hidden items-center gap-2">
+            <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800" id="activeFiltersText"></span>
+            <button type="button" onclick="resetAllPerformanceFilters()" class="text-[11px] font-bold text-rose-500 hover:text-rose-700 underline cursor-pointer">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Responsive Students Table -->
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-left text-xs whitespace-nowrap">
+            <thead>
+              <tr class="text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 uppercase tracking-wider font-semibold text-[10px]">
+                <th class="py-3 px-3">Student / Candidate</th>
+                <th class="py-3 px-3">Department & Year</th>
+                <th class="py-3 px-3 text-center">Attendance</th>
+                <th class="py-3 px-3 text-center">Study Hrs</th>
+                <th class="py-3 px-3 text-center">Prior Score</th>
+                <th class="py-3 px-3 text-center">Predicted Score</th>
+                <th class="py-3 px-3 text-center">Risk Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+              <!-- Rendered dynamically by renderStudentsTable() -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 4: COHORT ANALYTICS CHARTS                                -->
+    <!-- ================================================================= -->
+    <section id="analyticsChartsSection" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Chart 1: Grade Prediction Distribution -->
+      <div class="lg:col-span-7 clean-card p-5 sm:p-6 rounded-2xl shadow-lg border border-slate-200">
+        <div class="pb-3 mb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white font-heading">
+              Cohort Score Prediction Distribution
+            </h3>
+            <p class="text-[11px] text-slate-500">Distribution of predicted scores across cohort percentiles</p>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950 text-indigo-600 font-semibold">
+            Cohort N = <span id="chartCohortN">6</span>
+          </span>
+        </div>
+        <div class="h-60 w-full">
+          <canvas id="scoreDistChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Branch-wise Average Performance -->
+      <div class="lg:col-span-5 clean-card p-5 sm:p-6 rounded-2xl shadow-lg border border-slate-200 flex flex-col justify-between">
+        <div>
+          <div class="pb-3 mb-3 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white font-heading">
+              Department Performance Benchmark
+            </h3>
+            <p class="text-[11px] text-slate-500">Average predicted percentage by branch</p>
+          </div>
+          <div class="h-60 w-full">
+            <canvas id="branchComparisonChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 1: COMPOSE / BROADCAST NOTIFICATION                         -->
+  <!-- ================================================================= -->
+  <div id="broadcastModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden">
+    <div class="clean-card bg-white p-6 sm:p-7 rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <button onclick="closeBroadcastModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="pb-3 mb-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <i data-lucide="send" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading">Compose Notification</h3>
+          <p class="text-xs text-slate-500">Send an academic message or alert to students</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleSendNotification(event)" class="space-y-3.5 text-xs">
+        
+        <!-- Target Audience -->
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Target Audience</label>
+          <select id="notifTarget" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer">
+            <option value="all">📢 All Students (Cohort Broadcast)</option>
+            <option value="at-risk">⚠️ At-Risk Students Only (< 60% or < 75% Att.)</option>
+            <!-- Dynamic student options populated here -->
+          </select>
+        </div>
+
+        <!-- Category & Priority -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Category</label>
+            <select id="notifCategory" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer">
+              <option value="Academic Alert">Academic Alert</option>
+              <option value="Attendance Warning">Attendance Warning</option>
+              <option value="Mentorship">Mentorship Workshop</option>
+              <option value="Commendation">Commendation / Praise</option>
+              <option value="General Notice">General Notice</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Priority</label>
+            <select id="notifPriority" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer">
+              <option value="high">High (Red Tag)</option>
+              <option value="medium" selected>Medium (Amber Tag)</option>
+              <option value="info">Info (Blue Tag)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Title / Subject</label>
+          <input type="text" id="notifTitle" required placeholder="e.g. Remedial Math Workshop this Thursday" class="w-full px-3 py-2 rounded-xl form-input-clean">
+        </div>
+
+        <!-- Message Body -->
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Notification Message</label>
+          <textarea id="notifMessage" rows="3" required placeholder="Enter clear instructions or encouragement for the students..." class="w-full px-3 py-2 rounded-xl form-input-clean resize-none"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeBroadcastModal()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-semibold hover:bg-slate-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md transition-all flex items-center gap-1.5">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span>Broadcast Now</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 2: STUDENT DETAIL REPORT POPUP                              -->
+  <!-- ================================================================= -->
+  <div id="studentDetailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden">
+    <div class="clean-card bg-white p-6 sm:p-7 rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <button onclick="closeStudentDetailModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="pb-3 mb-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-base shadow-sm" id="modalStudentAvatar">
+          RK
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading" id="modalStudentName">Rahul Kumar</h3>
+          <p class="text-xs text-slate-500" id="modalStudentMeta">B.Tech &bull; Computer Science &bull; CAND2026</p>
+        </div>
+      </div>
+
+      <!-- Metric Cards Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4 text-center">
+        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+          <div class="text-[10px] text-slate-500">Attendance</div>
+          <div class="text-sm font-bold text-slate-900 dark:text-white" id="modalAttendance">85%</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+          <div class="text-[10px] text-slate-500">Study Hours</div>
+          <div class="text-sm font-bold text-slate-900 dark:text-white" id="modalStudyHours">5 hrs/d</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700">
+          <div class="text-[10px] text-slate-500">Prior Score</div>
+          <div class="text-sm font-bold text-slate-900 dark:text-white" id="modalPriorScore">78%</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-800">
+          <div class="text-[10px] text-blue-600 font-semibold">Predicted</div>
+          <div class="text-sm font-extrabold text-blue-700 dark:text-blue-300" id="modalPredicted">82.6%</div>
+        </div>
+      </div>
+
+      <!-- Previous Years Track Record Blocks -->
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 mb-3 space-y-1">
+        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Previous Years Academic History:</div>
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="p-1 rounded-lg bg-white dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600">
+            <span class="text-[9px] text-slate-400">1st Year:</span>
+            <span class="font-bold text-slate-800 dark:text-slate-200 ml-1" id="modalY1">--</span>
+          </div>
+          <div class="p-1 rounded-lg bg-white dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600">
+            <span class="text-[9px] text-slate-400">2nd Year:</span>
+            <span class="font-bold text-slate-800 dark:text-slate-200 ml-1" id="modalY2">--</span>
+          </div>
+          <div class="p-1 rounded-lg bg-white dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600">
+            <span class="text-[9px] text-slate-400">3rd Year:</span>
+            <span class="font-bold text-slate-800 dark:text-slate-200 ml-1" id="modalY3">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Technical Skills (Coding, Designing, etc.) -->
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 mb-3 space-y-1.5">
+        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+          <span class="flex items-center gap-1">
+            <i data-lucide="code-2" class="w-3 h-3 text-blue-600"></i>
+            <span>Technical Skills Portfolio:</span>
+          </span>
+          <span class="text-blue-600 font-semibold text-[10px]" id="modalSkillsCount">0 Skills</span>
+        </div>
+        <div id="modalSkillsList" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- AI Analysis Summary -->
+      <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 text-xs space-y-1.5 mb-4">
+        <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i>
+          <span>Academic Evaluation Summary</span>
+        </div>
+        <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed" id="modalAnalysisText">
+          Student shows solid class engagement with steady daily revision. On track to achieve first-class honors.
+        </p>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex gap-2">
+        <button id="modalDirectNotifBtn" class="flex-1 py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Send Student Direct Message</span>
+        </button>
+        <button onclick="closeStudentDetailModal()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 3: ADD STUDENT TO DATABASE                                  -->
+  <!-- ================================================================= -->
+  <div id="addStudentModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden">
+    <div class="clean-card bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200 dark:border-slate-800 relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="closeAddStudentModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="pb-3 mb-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+          <i data-lucide="user-plus" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white font-heading">Add Student to Database</h3>
+          <p class="text-xs text-slate-500">Record a new student profile and calculate AI performance predictions</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleAddStudent(event)" class="space-y-3 text-xs">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Candidate ID / Roll No <span class="text-rose-500">*</span></label>
+            <input type="text" id="newStudentId" required placeholder="e.g. CAND2026" class="w-full px-3 py-2 rounded-xl form-input-clean text-xs">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name <span class="text-rose-500">*</span></label>
+            <input type="text" id="newStudentName" required placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 rounded-xl form-input-clean text-xs">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Student Email <span class="text-rose-500">*</span></label>
+            <input type="email" id="newStudentEmail" required placeholder="e.g. student@college.edu" class="w-full px-3 py-2 rounded-xl form-input-clean text-xs">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Mobile Number</label>
+            <input type="tel" id="newStudentMobile" placeholder="e.g. 9876543210" class="w-full px-3 py-2 rounded-xl form-input-clean text-xs">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Course</label>
+            <select id="newStudentCourse" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer text-xs">
+              <option value="B.Tech" selected>B.Tech</option>
+              <option value="BCA">BCA</option>
+              <option value="MCA">MCA</option>
+              <option value="B.Sc">B.Sc</option>
+              <option value="M.Tech">M.Tech</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Branch / Department</label>
+            <select id="newStudentBranch" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer text-xs">
+              <option value="Computer Science" selected>Computer Science</option>
+              <option value="Artificial Intelligence & DS">Artificial Intelligence & DS</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics Engineering">Electronics Engineering</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Year of Study</label>
+            <select id="newStudentYear" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer text-xs">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year" selected>3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Academic Inputs for Prediction -->
+        <div class="p-3.5 rounded-xl bg-gradient-to-br from-blue-50/70 to-indigo-50/50 dark:from-slate-800/80 dark:to-slate-900/60 border border-blue-100 dark:border-blue-900 space-y-2.5">
+          <div class="text-[11px] font-bold text-blue-700 dark:text-blue-300 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+              <span>Previous Years Academic Percentages</span>
+            </span>
+            <span class="text-[10px] text-blue-600 font-semibold" id="newAdminAvgDisplay">Avg: 78.0%</span>
+          </div>
+          
+          <!-- 1st, 2nd, 3rd Year Percentage Blocks -->
+          <div class="grid grid-cols-3 gap-2">
+            <div class="p-2 rounded-lg bg-white/90 dark:bg-slate-800 border border-blue-100 dark:border-slate-700 text-center space-y-1">
+              <label class="block font-bold text-blue-900 dark:text-blue-300 text-[10px]">1st Year (%)</label>
+              <input type="number" id="newStudentY1" min="0" max="100" step="0.1" value="76" placeholder="76" oninput="recalcAdminNewStudentAvg()" class="w-full px-2 py-1 rounded form-input-clean text-xs text-center font-semibold">
+            </div>
+            <div class="p-2 rounded-lg bg-white/90 dark:bg-slate-800 border border-indigo-100 dark:border-slate-700 text-center space-y-1">
+              <label class="block font-bold text-indigo-900 dark:text-indigo-300 text-[10px]">2nd Year (%)</label>
+              <input type="number" id="newStudentY2" min="0" max="100" step="0.1" value="78" placeholder="78" oninput="recalcAdminNewStudentAvg()" class="w-full px-2 py-1 rounded form-input-clean text-xs text-center font-semibold">
+            </div>
+            <div class="p-2 rounded-lg bg-white/90 dark:bg-slate-800 border border-purple-100 dark:border-slate-700 text-center space-y-1">
+              <label class="block font-bold text-purple-900 dark:text-purple-300 text-[10px]">3rd Year (%)</label>
+              <input type="number" id="newStudentY3" min="0" max="100" step="0.1" value="80" placeholder="80" oninput="recalcAdminNewStudentAvg()" class="w-full px-2 py-1 rounded form-input-clean text-xs text-center font-semibold">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-0.5">Current Attendance (%)</label>
+              <input type="number" id="newStudentAttendance" min="0" max="100" value="85" required class="w-full px-2.5 py-1.5 rounded-lg form-input-clean text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-0.5">Daily Study (Hours)</label>
+              <input type="number" id="newStudentStudyHours" min="0" max="16" step="0.5" value="4.5" required class="w-full px-2.5 py-1.5 rounded-lg form-input-clean text-xs">
+            </div>
+          </div>
+          <input type="hidden" id="newStudentPrevScore" value="78">
+        </div>
+
+        <!-- Extracurricular & Password -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Extracurricular Activities</label>
+            <select id="newStudentExtra" class="w-full px-3 py-2 rounded-xl form-input-clean cursor-pointer text-xs">
+              <option value="Yes" selected>Yes (Active)</option>
+              <option value="Medium">Medium</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Student Login Password</label>
+            <input type="text" id="newStudentPassword" value="password123" required class="w-full px-3 py-2 rounded-xl form-input-clean text-xs font-mono">
+          </div>
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Save Student to Database</span>
+          </button>
+          <button type="button" onclick="closeAddStudentModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- End Modals -->
+
+  <script src="js/ml-predictor.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // State
+    let currentStudents = [];
+    let scoreDistChartInstance = null;
+    let branchComparisonChartInstance = null;
+
+    // Check Admin Authentication
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      // Ensure Admin is logged in
+      if (!AdminStore.isLoggedIn()) {
+        Toast.show('Please sign in as Administrator to access this portal.', 'warning');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 600);
+        return;
+      }
+
+      renderAll();
+    });
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleAdminLogout() {
+      if (confirm('Sign out of Administrator Portal?')) {
+        AdminStore.logout();
+      }
+    }
+
+    // Render Current Logged-in Admin Identity in Header & Sidebar
+    function renderAdminHeaderIdentity() {
+      const current = AdminStore.getCurrentAdmin() || AdminStore.defaultAdmin;
+      if (document.getElementById('topAdminName')) document.getElementById('topAdminName').textContent = current.name || 'Administrator';
+      if (document.getElementById('topAdminRole')) document.getElementById('topAdminRole').textContent = current.role || 'Administrator';
+      if (document.getElementById('topAdminAvatar')) document.getElementById('topAdminAvatar').textContent = current.avatar || 'AD';
+      if (document.getElementById('sidebarAdminName')) document.getElementById('sidebarAdminName').textContent = current.name || 'Administrator';
+      if (document.getElementById('sidebarAdminRole')) document.getElementById('sidebarAdminRole').textContent = current.role || 'Chief Administrator';
+      if (document.getElementById('sidebarAdminAvatar')) document.getElementById('sidebarAdminAvatar').textContent = current.avatar || 'AD';
+    }
+
+    // Attendance & Marks Threshold Filter State
+    let currentAttendanceFilter = 'all';
+    let currentMarksFilter = 'all';
+
+    function checkPercentageThreshold(value, filterKey) {
+      if (!filterKey || filterKey === 'all') return true;
+      const num = parseFloat(value);
+      if (isNaN(num)) return true;
+      if (filterKey === 'under90') return num < 90;
+      if (filterKey === 'under80') return num < 80;
+      if (filterKey === 'under70') return num < 70;
+      if (filterKey === 'under60') return num < 60;
+      if (filterKey === 'under50') return num < 50;
+      if (filterKey === 'under40') return num < 40;
+      if (filterKey === 'below30') return num < 30;
+      return true;
+    }
+
+    function toggleAttendanceDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('attendanceDropdownMenu');
+      const marksMenu = document.getElementById('marksDropdownMenu');
+      if (marksMenu) marksMenu.classList.add('hidden');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function toggleMarksDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('marksDropdownMenu');
+      const attMenu = document.getElementById('attendanceDropdownMenu');
+      if (attMenu) attMenu.classList.add('hidden');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    // Close dropdown menus when clicking outside
+    document.addEventListener('click', (e) => {
+      const attWrapper = document.getElementById('attendanceDropdownWrapper');
+      const marksWrapper = document.getElementById('marksDropdownWrapper');
+      if (attWrapper && !attWrapper.contains(e.target)) {
+        document.getElementById('attendanceDropdownMenu')?.classList.add('hidden');
+      }
+      if (marksWrapper && !marksWrapper.contains(e.target)) {
+        document.getElementById('marksDropdownMenu')?.classList.add('hidden');
+      }
+    });
+
+    function setAttendanceFilter(val) {
+      currentAttendanceFilter = val;
+      document.getElementById('attendanceDropdownMenu')?.classList.add('hidden');
+      updateFilterUIState();
+      applyFilters();
+    }
+
+    function setMarksFilter(val) {
+      currentMarksFilter = val;
+      document.getElementById('marksDropdownMenu')?.classList.add('hidden');
+      updateFilterUIState();
+      applyFilters();
+    }
+
+    function resetAllPerformanceFilters() {
+      currentAttendanceFilter = 'all';
+      currentMarksFilter = 'all';
+      const search = document.getElementById('searchStudentInput');
+      if (search) search.value = '';
+      const band = document.getElementById('filterBand');
+      if (band) band.value = 'all';
+      const branch = document.getElementById('filterBranch');
+      if (branch) branch.value = 'all';
+      updateFilterUIState();
+      applyFilters();
+    }
+
+    function updateFilterUIState() {
+      const attPills = ['all', 'under90', 'under80', 'under70', 'under60', 'under50', 'under40', 'below30'];
+      const marksPills = ['all', 'under90', 'under80', 'under70', 'under60', 'under50', 'under40', 'below30'];
+
+      const activePillClass = 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-2xs';
+      const inactivePillClass = 'px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all';
+      const activeRosePillClass = 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all bg-rose-600 text-white shadow-2xs';
+      const inactiveRosePillClass = 'px-2.5 py-1 rounded-lg text-[11px] font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-700 transition-all';
+
+      const activeMarksPillClass = 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-400 shadow-2xs';
+      const inactiveMarksPillClass = 'px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all';
+
+      // Update Attendance pills
+      attPills.forEach(k => {
+        const el = document.getElementById(`pill-att-${k}`);
+        if (!el) return;
+        if (k === currentAttendanceFilter) {
+          el.className = (k === 'below30') ? activeRosePillClass : activePillClass;
+        } else {
+          el.className = (k === 'below30') ? inactiveRosePillClass : inactivePillClass;
+        }
+      });
+
+      // Update Marks pills
+      marksPills.forEach(k => {
+        const el = document.getElementById(`pill-marks-${k}`);
+        if (!el) return;
+        if (k === currentMarksFilter) {
+          el.className = (k === 'below30') ? activeRosePillClass : activeMarksPillClass;
+        } else {
+          el.className = (k === 'below30') ? inactiveRosePillClass : inactiveMarksPillClass;
+        }
+      });
+
+      // Update Attendance Button Label
+      const attBtn = document.getElementById('attendanceFilterBtn');
+      const attLabel = document.getElementById('attendanceFilterBtnLabel');
+      if (attBtn && attLabel) {
+        if (currentAttendanceFilter === 'all') {
+          attLabel.textContent = 'Attendance';
+          attBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-2xs transition-all cursor-pointer';
+        } else {
+          const textMap = {
+            under90: '< 90%', under80: '< 80%', under70: '< 70%', under60: '< 60%',
+            under50: '< 50%', under40: '< 40%', below30: '< 30%'
+          };
+          attLabel.textContent = `Attendance: ${textMap[currentAttendanceFilter] || currentAttendanceFilter}`;
+          attBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-600 bg-indigo-600 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all cursor-pointer';
+        }
+      }
+
+      // Update Marks Button Label
+      const marksBtn = document.getElementById('marksFilterBtn');
+      const marksLabel = document.getElementById('marksFilterBtnLabel');
+      if (marksBtn && marksLabel) {
+        if (currentMarksFilter === 'all') {
+          marksLabel.textContent = 'Marks';
+          marksBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-2xs transition-all cursor-pointer';
+        } else {
+          const textMap = {
+            under90: '< 90%', under80: '< 80%', under70: '< 70%', under60: '< 60%',
+            under50: '< 50%', under40: '< 40%', below30: '< 30%'
+          };
+          marksLabel.textContent = `Marks: ${textMap[currentMarksFilter] || currentMarksFilter}`;
+          marksBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500 bg-amber-500 text-white font-bold text-xs shadow-md shadow-amber-500/30 transition-all cursor-pointer';
+        }
+      }
+
+      // Update Summary badge
+      const summary = document.getElementById('activeFiltersSummary');
+      const summaryText = document.getElementById('activeFiltersText');
+      if (summary && summaryText) {
+        const activeItems = [];
+        if (currentAttendanceFilter !== 'all') {
+          activeItems.push(`Attendance < ${currentAttendanceFilter.replace('under', '').replace('below', '')}%`);
+        }
+        if (currentMarksFilter !== 'all') {
+          activeItems.push(`Marks < ${currentMarksFilter.replace('under', '').replace('below', '')}%`);
+        }
+        if (activeItems.length > 0) {
+          summary.classList.remove('hidden');
+          summary.classList.add('inline-flex');
+          summaryText.textContent = `Active Filter: ${activeItems.join(' & ')}`;
+        } else {
+          summary.classList.add('hidden');
+          summary.classList.remove('inline-flex');
+        }
+      }
+
+      updateThresholdCounts();
+    }
+
+    function updateThresholdCounts() {
+      const countsAtt = { all: currentStudents.length, 90: 0, 80: 0, 70: 0, 60: 0, 50: 0, 40: 0, 30: 0 };
+      const countsMarks = { all: currentStudents.length, 90: 0, 80: 0, 70: 0, 60: 0, 50: 0, 40: 0, 30: 0 };
+
+      currentStudents.forEach(s => {
+        const att = parseFloat(s.attendance) || 80;
+        const pred = s.prediction || (typeof MLPredictor !== 'undefined' ? MLPredictor.predict(s) : {});
+        const score = pred.predictedPercentage || 75;
+        const marks = (s.previousScore !== undefined && s.previousScore !== null && s.previousScore !== '' && !isNaN(parseFloat(s.previousScore)))
+          ? parseFloat(s.previousScore)
+          : score;
+
+        if (att < 90) countsAtt[90]++;
+        if (att < 80) countsAtt[80]++;
+        if (att < 70) countsAtt[70]++;
+        if (att < 60) countsAtt[60]++;
+        if (att < 50) countsAtt[50]++;
+        if (att < 40) countsAtt[40]++;
+        if (att < 30) countsAtt[30]++;
+
+        if (marks < 90) countsMarks[90]++;
+        if (marks < 80) countsMarks[80]++;
+        if (marks < 70) countsMarks[70]++;
+        if (marks < 60) countsMarks[60]++;
+        if (marks < 50) countsMarks[50]++;
+        if (marks < 40) countsMarks[40]++;
+        if (marks < 30) countsMarks[30]++;
+      });
+
+      ['all', '90', '80', '70', '60', '50', '40', '30'].forEach(k => {
+        const attEl = document.getElementById(`count-att-${k}`);
+        if (attEl) attEl.textContent = `${countsAtt[k]} ${countsAtt[k] === 1 ? 'student' : 'students'}`;
+        const marksEl = document.getElementById(`count-marks-${k}`);
+        if (marksEl) marksEl.textContent = `${countsMarks[k]} ${countsMarks[k] === 1 ? 'student' : 'students'}`;
+      });
+    }
+
+    function renderAll() {
+      currentStudents = AppStore.getAllUsers();
+      renderAdminHeaderIdentity();
+      renderKPIs();
+      updateFilterUIState();
+      applyFilters();
+      renderNotifications();
+      renderCharts();
+      populateTargetDropdown();
+      lucide.createIcons();
+    }
+
+    // Render 4 KPI Cards
+    function renderKPIs() {
+      const total = currentStudents.length;
+      document.getElementById('kpiTotalStudents').textContent = total;
+
+      if (total === 0) {
+        document.getElementById('kpiAvgPredicted').textContent = '--';
+        document.getElementById('kpiAvgAttendance').textContent = '--';
+        document.getElementById('kpiAtRiskCount').textContent = '0';
+        return;
+      }
+
+      const avgPred = currentStudents.reduce((acc, s) => acc + (s.prediction?.predictedPercentage || 75), 0) / total;
+      document.getElementById('kpiAvgPredicted').textContent = avgPred.toFixed(1) + '%';
+
+      const avgAtt = currentStudents.reduce((acc, s) => acc + (parseFloat(s.attendance) || 80), 0) / total;
+      document.getElementById('kpiAvgAttendance').textContent = avgAtt.toFixed(1) + '%';
+
+      const atRisk = currentStudents.filter(s => {
+        const pred = s.prediction?.predictedPercentage || 70;
+        const att = parseFloat(s.attendance) || 80;
+        return pred < 60 || att < 75;
+      }).length;
+      document.getElementById('kpiAtRiskCount').textContent = atRisk;
+    }
+
+    // Render Cohort Students Table
+    function renderStudentsTable(filteredList = null) {
+      const list = filteredList || currentStudents;
+      const tbody = document.getElementById('studentsTableBody');
+      tbody.innerHTML = '';
+
+      if (list.length === 0) {
+        const isFiltered = (filteredList !== null && currentStudents.length > 0) || currentAttendanceFilter !== 'all' || currentMarksFilter !== 'all';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-10 px-4">
+              <div class="max-w-md mx-auto text-center space-y-2.5">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-slate-800 text-blue-600 flex items-center justify-center mx-auto shadow-sm">
+                  <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-800 dark:text-white">
+                  ${isFiltered ? 'No matching student records found' : 'Student Database is Currently Empty'}
+                </h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  ${isFiltered 
+                    ? 'No candidates meet the active filter combination. You can adjust your criteria or click below to reset.' 
+                    : 'All mock student records have been cleared. When new students register or when you click "Add Student", their profile and AI predictions will be saved and listed here.'}
+                </p>
+                ${isFiltered ? `
+                  <div class="pt-2">
+                    <button onclick="resetAllPerformanceFilters()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
+                      <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                      <span>Reset Attendance & Marks Filters</span>
+                    </button>
+                  </div>
+                ` : `
+                  <div class="pt-2">
+                    <button onclick="openAddStudentModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all cursor-pointer">
+                      <i data-lucide="user-plus" class="w-4 h-4"></i>
+                      <span>+ Add First Student to Database</span>
+                    </button>
+                  </div>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      list.forEach(student => {
+        const pred = student.prediction || MLPredictor.predict(student);
+        const score = pred.predictedPercentage || 75;
+        const att = parseFloat(student.attendance) || 80;
+
+        let riskBadge = '';
+        if (score >= 80) {
+          riskBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">Normal / Safe</span>';
+        } else if (score >= 60) {
+          riskBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-800">Attention</span>';
+        } else {
+          riskBadge = '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border border-rose-200 dark:border-rose-800 animate-pulse">At-Risk</span>';
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors';
+        tr.innerHTML = `
+          <td class="py-3 px-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[10px] shrink-0">
+                ${student.fullName.split(' ').map(n=>n[0]).join('').substring(0,2)}
+              </div>
+              <div class="min-w-0">
+                <div class="font-bold text-slate-900 dark:text-white truncate">${student.fullName}</div>
+                <div class="text-[10px] font-mono text-blue-600 dark:text-blue-400">${student.candidateId}</div>
+              </div>
+            </div>
+          </td>
+          <td class="py-3 px-3 text-slate-600 dark:text-slate-400">
+            <div>${student.branch || 'Computer Science'}</div>
+            <div class="text-[10px] text-slate-400">${student.course || 'B.Tech'} &bull; ${student.yearOfStudy || '3rd Year'}</div>
+          </td>
+          <td class="py-3 px-3 text-center">
+            <span class="font-bold ${att < 75 ? 'text-rose-600' : 'text-slate-800 dark:text-slate-200'}">${att}%</span>
+          </td>
+          <td class="py-3 px-3 text-center font-semibold text-slate-700 dark:text-slate-300">
+            ${student.studyHours || 4} hrs/d
+          </td>
+          <td class="py-3 px-3 text-center text-slate-600 dark:text-slate-400">
+            ${student.previousScore || 70}%
+          </td>
+          <td class="py-3 px-3 text-center">
+            <span class="font-extrabold ${score >= 80 ? 'text-emerald-600 dark:text-emerald-400' : (score >= 60 ? 'text-blue-600 dark:text-blue-400' : 'text-rose-600')}">
+              ${score}%
+            </span>
+          </td>
+          <td class="py-3 px-3 text-center">
+            ${riskBadge}
+          </td>
+          <td class="py-3 px-3 text-right">
+            <div class="inline-flex items-center gap-1.5">
+              <button 
+                onclick="openDirectMessage('${student.candidateId}', '${student.fullName}')" 
+                class="p-1 rounded-lg hover:bg-indigo-50 dark:hover:bg-slate-700 text-indigo-600 transition-colors" 
+                title="Send direct notification"
+              >
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              </button>
+              <button 
+                onclick="viewStudentDetail('${student.candidateId}')" 
+                class="p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-600 transition-colors" 
+                title="View full report"
+              >
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              </button>
+              <button 
+                onclick="deleteStudentRecord('${student.candidateId}')" 
+                class="p-1 rounded-lg hover:bg-rose-50 dark:hover:bg-slate-700 text-rose-500 transition-colors" 
+                title="Delete record"
+              >
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    // Filter Logic
+    function applyFilters() {
+      const search = document.getElementById('searchStudentInput').value.toLowerCase().trim();
+      const band = document.getElementById('filterBand').value;
+      const branch = document.getElementById('filterBranch').value;
+
+      const filtered = currentStudents.filter(s => {
+        const matchesSearch = !search || 
+          s.fullName.toLowerCase().includes(search) || 
+          s.candidateId.toLowerCase().includes(search) ||
+          (s.email && s.email.toLowerCase().includes(search));
+
+        const pred = s.prediction || (typeof MLPredictor !== 'undefined' ? MLPredictor.predict(s) : {});
+        const score = pred.predictedPercentage || 75;
+
+        let matchesBand = true;
+        if (band === 'Good') matchesBand = score >= 80;
+        else if (band === 'Average') matchesBand = score >= 60 && score < 80;
+        else if (band === 'At Risk') matchesBand = score < 60;
+
+        let matchesBranch = true;
+        if (branch !== 'all') matchesBranch = s.branch === branch;
+
+        // Attendance threshold
+        const att = parseFloat(s.attendance) || 80;
+        const matchesAttendance = checkPercentageThreshold(att, currentAttendanceFilter);
+
+        // Marks threshold (uses prior academic score, falling back to predicted score)
+        const marks = (s.previousScore !== undefined && s.previousScore !== null && s.previousScore !== '' && !isNaN(parseFloat(s.previousScore)))
+          ? parseFloat(s.previousScore)
+          : score;
+        const matchesMarks = checkPercentageThreshold(marks, currentMarksFilter);
+
+        return matchesSearch && matchesBand && matchesBranch && matchesAttendance && matchesMarks;
+      });
+
+      renderStudentsTable(filtered);
+    }
+
+    function filterByBand(band) {
+      document.getElementById('filterBand').value = band;
+      applyFilters();
+      scrollToSection('studentsTableSection');
+    }
+
+    // Render Notifications with Live Reactions
+    function renderNotifications() {
+      const container = document.getElementById('notificationsContainer');
+      const list = NotificationStore.getAll();
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 text-center clean-card rounded-2xl text-slate-400">
+            No active broadcast notifications. Click "Compose New Notification" to send one.
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(notif => {
+        const reactions = notif.reactions || {};
+        const reactionCount = Object.keys(reactions).length;
+
+        // Group reactions by emoji
+        const grouped = {};
+        Object.values(reactions).forEach(r => {
+          grouped[r.reaction] = (grouped[r.reaction] || 0) + 1;
+        });
+
+        let reactionsHtml = '';
+        if (reactionCount > 0) {
+          const pills = Object.entries(grouped).map(([emoji, count]) => {
+            return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-semibold">${emoji} ${count}</span>`;
+          }).join(' ');
+
+          const studentNames = Object.values(reactions).map(r => r.name).slice(0, 3).join(', ');
+          const extra = reactionCount > 3 ? ` +${reactionCount - 3} more` : '';
+
+          reactionsHtml = `
+            <div class="pt-2.5 mt-2.5 border-t border-slate-100 dark:border-slate-800">
+              <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                Student Reactions (${reactionCount}):
+              </div>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                ${pills}
+              </div>
+              <div class="text-[10px] text-slate-500 mt-1 truncate">
+                From: ${studentNames}${extra}
+              </div>
+            </div>
+          `;
+        } else {
+          reactionsHtml = `
+            <div class="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-400 italic">
+              Awaiting student reactions...
+            </div>
+          `;
+        }
+
+        const priorityColors = {
+          high: 'bg-rose-50 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 border-rose-200 dark:border-rose-800',
+          medium: 'bg-amber-50 text-amber-700 dark:bg-amber-950/80 dark:text-amber-300 border-amber-200 dark:border-amber-800',
+          info: 'bg-blue-50 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+        };
+
+        const targetLabel = notif.targetStudentId === 'all' 
+          ? '📢 Cohort Broadcast' 
+          : (notif.targetStudentId === 'at-risk' ? '⚠️ At-Risk Cohort' : `🎯 Direct: ${notif.targetStudentId}`);
+
+        const card = document.createElement('div');
+        card.className = 'clean-card p-4 sm:p-5 rounded-2xl flex flex-col justify-between border border-slate-200 relative group';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${priorityColors[notif.priority] || priorityColors.info}">
+                ${notif.category || 'Alert'}
+              </span>
+              <div class="flex items-center gap-1">
+                <span class="text-[10px] font-mono text-slate-400">${notif.timestamp}</span>
+                <button onclick="deleteNotif('${notif.id}')" class="p-1 text-slate-300 hover:text-rose-500 transition-colors" title="Delete notification">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug">
+              ${notif.title}
+            </h3>
+
+            <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+              ${notif.message}
+            </p>
+
+            <div class="mt-2 text-[10px] font-medium text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+              <span>${targetLabel}</span>
+              <span class="text-slate-400">&bull;</span>
+              <span class="text-slate-400">${notif.sender}</span>
+            </div>
+          </div>
+
+          ${reactionsHtml}
+        `;
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function deleteNotif(id) {
+      if (confirm('Delete this notification?')) {
+        NotificationStore.delete(id);
+        renderNotifications();
+        Toast.show('Notification removed.', 'info');
+      }
+    }
+
+    function populateTargetDropdown() {
+      const select = document.getElementById('notifTarget');
+      // Keep first 2 options
+      select.innerHTML = `
+        <option value="all">📢 All Students (Cohort Broadcast)</option>
+        <option value="at-risk">⚠️ At-Risk Students Only (< 60% or < 75% Att.)</option>
+      `;
+
+      currentStudents.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.candidateId;
+        opt.textContent = `🎯 Individual: ${s.fullName} (${s.candidateId})`;
+        select.appendChild(opt);
+      });
+    }
+
+    // Modal Operations
+    function openBroadcastModal() {
+      document.getElementById('broadcastModal').classList.remove('hidden');
+    }
+
+    function closeBroadcastModal() {
+      document.getElementById('broadcastModal').classList.add('hidden');
+    }
+
+    function handleSendNotification(e) {
+      e.preventDefault();
+      const target = document.getElementById('notifTarget').value;
+      const category = document.getElementById('notifCategory').value;
+      const priority = document.getElementById('notifPriority').value;
+      const title = document.getElementById('notifTitle').value.trim();
+      const message = document.getElementById('notifMessage').value.trim();
+
+      NotificationStore.send({
+        title,
+        message,
+        category,
+        priority,
+        targetStudentId: target,
+        sender: 'Dr. Mukherjee (Administrator)'
+      });
+
+      closeBroadcastModal();
+      renderNotifications();
+      Toast.show('Notification broadcast successfully to students!', 'success');
+      document.getElementById('notifTitle').value = '';
+      document.getElementById('notifMessage').value = '';
+    }
+
+    function openDirectMessage(candidateId, fullName) {
+      openBroadcastModal();
+      document.getElementById('notifTarget').value = candidateId;
+      document.getElementById('notifTitle').value = `Academic Feedback for ${fullName}`;
+    }
+
+    // Student Detail View Modal
+    function viewStudentDetail(candidateId) {
+      const student = AppStore.getStudentById(candidateId);
+      if (!student) return;
+
+      const pred = student.prediction || MLPredictor.predict(student);
+      const score = pred.predictedPercentage || 75;
+
+      document.getElementById('modalStudentAvatar').textContent = student.fullName.split(' ').map(n=>n[0]).join('').substring(0,2);
+      document.getElementById('modalStudentName').textContent = student.fullName;
+      document.getElementById('modalStudentMeta').textContent = `${student.course || 'B.Tech'} • ${student.branch || 'Computer Science'} • ${student.candidateId}`;
+      document.getElementById('modalAttendance').textContent = `${student.attendance || 80}%`;
+      document.getElementById('modalStudyHours').textContent = `${student.studyHours || 4} hrs/d`;
+      document.getElementById('modalPriorScore').textContent = `${student.previousScore || 70}%`;
+      document.getElementById('modalPredicted').textContent = `${score}% (${pred.classification || 'Good'})`;
+
+      // Previous Years Breakdown in Modal
+      const my1 = student.year1Score !== undefined ? `${student.year1Score}%` : (student.previousScore ? `${(student.previousScore - 1.5).toFixed(1)}%` : '--');
+      const my2 = student.year2Score !== undefined ? `${student.year2Score}%` : (student.previousScore ? `${student.previousScore}%` : '--');
+      const my3 = student.year3Score !== undefined ? `${student.year3Score}%` : (student.previousScore ? `${(student.previousScore + 1.2).toFixed(1)}%` : '--');
+      if (document.getElementById('modalY1')) document.getElementById('modalY1').textContent = my1;
+      if (document.getElementById('modalY2')) document.getElementById('modalY2').textContent = my2;
+      if (document.getElementById('modalY3')) document.getElementById('modalY3').textContent = my3;
+
+      // Populate Technical Skills in Admin Modal
+      const skills = Array.isArray(student.skills) && student.skills.length > 0
+        ? student.skills
+        : (student.candidateId === 'CAND2026' ? AppStore.getDefaultSkills() : []);
+
+      const skillsContainer = document.getElementById('modalSkillsList');
+      const skillsCount = document.getElementById('modalSkillsCount');
+      if (skillsContainer) {
+        skillsContainer.innerHTML = '';
+        if (skillsCount) skillsCount.textContent = `${skills.length} Skills`;
+        if (skills.length === 0) {
+          skillsContainer.innerHTML = `<span class="text-[11px] text-slate-400">No technical skills recorded yet.</span>`;
+        } else {
+          skills.forEach(sk => {
+            const isDesign = (sk.category || '').toLowerCase() === 'designing';
+            const badgeClass = isDesign
+              ? 'bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-950 dark:text-fuchsia-300 border-fuchsia-200 dark:border-fuchsia-800'
+              : 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+            const pill = document.createElement('span');
+            pill.className = `px-2 py-0.5 rounded-md text-[10px] font-semibold border ${badgeClass} inline-flex items-center gap-1`;
+            pill.innerHTML = `<span>${sk.name}</span><strong class="font-mono text-[9px]">${sk.proficiency}%</strong>`;
+            skillsContainer.appendChild(pill);
+          });
+        }
+      }
+
+      let summary = '';
+      if (score >= 80) {
+        summary = `${student.fullName} demonstrates exceptional academic rigor. High attendance (${student.attendance}%) and consistent study habits place this candidate in the top performance bracket.`;
+      } else if (score >= 60) {
+        summary = `${student.fullName} is maintaining average benchmark grades. An increase of 1.5 to 2 hours in daily study hours would safely move the predicted outcome into the first-class band.`;
+      } else {
+        summary = `⚠️ Critical attention required for ${student.fullName}. Low attendance (${student.attendance}%) and minimal self-study hours (${student.studyHours}h) present an elevated risk of semester backlog. Immediate remedial intervention scheduled.`;
+      }
+      document.getElementById('modalAnalysisText').textContent = summary;
+
+      document.getElementById('modalDirectNotifBtn').onclick = () => {
+        closeStudentDetailModal();
+        openDirectMessage(student.candidateId, student.fullName);
+      };
+
+      document.getElementById('studentDetailModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeStudentDetailModal() {
+      document.getElementById('studentDetailModal').classList.add('hidden');
+    }
+
+    // Modal Operations: Add Student to Database
+    function openAddStudentModal() {
+      const all = AppStore.getAllUsers();
+      document.getElementById('newStudentId').value = 'CAND' + (2026 + all.length);
+      document.getElementById('addStudentModal').classList.remove('hidden');
+      setTimeout(() => {
+        const nameInput = document.getElementById('newStudentName');
+        if (nameInput) nameInput.focus();
+      }, 100);
+      lucide.createIcons();
+    }
+
+    function closeAddStudentModal() {
+      document.getElementById('addStudentModal').classList.add('hidden');
+    }
+
+    function recalcAdminNewStudentAvg() {
+      const y1 = parseFloat(document.getElementById('newStudentY1')?.value);
+      const y2 = parseFloat(document.getElementById('newStudentY2')?.value);
+      const y3 = parseFloat(document.getElementById('newStudentY3')?.value);
+
+      const validScores = [y1, y2, y3].filter(s => !isNaN(s) && s > 0 && s <= 100);
+      let avg = 78;
+      if (validScores.length > 0) {
+        avg = validScores.reduce((a, b) => a + b, 0) / validScores.length;
+      }
+      const formatted = parseFloat(avg.toFixed(1));
+      const display = document.getElementById('newAdminAvgDisplay');
+      if (display) display.textContent = `Avg: ${formatted}%`;
+      const hidden = document.getElementById('newStudentPrevScore');
+      if (hidden) hidden.value = formatted;
+      return formatted;
+    }
+
+    function handleAddStudent(e) {
+      e.preventDefault();
+      const avg = recalcAdminNewStudentAvg();
+      const studentData = {
+        candidateId: document.getElementById('newStudentId').value.trim(),
+        fullName: document.getElementById('newStudentName').value.trim(),
+        email: document.getElementById('newStudentEmail').value.trim(),
+        mobile: document.getElementById('newStudentMobile').value.trim(),
+        collegeName: 'ALTS',
+        course: document.getElementById('newStudentCourse').value,
+        branch: document.getElementById('newStudentBranch').value,
+        yearOfStudy: document.getElementById('newStudentYear').value,
+        year1Score: parseFloat(document.getElementById('newStudentY1')?.value) || undefined,
+        year2Score: parseFloat(document.getElementById('newStudentY2')?.value) || undefined,
+        year3Score: parseFloat(document.getElementById('newStudentY3')?.value) || undefined,
+        previousScore: avg,
+        attendance: parseFloat(document.getElementById('newStudentAttendance').value) || 80,
+        studyHours: parseFloat(document.getElementById('newStudentStudyHours').value) || 4,
+        extracurricular: document.getElementById('newStudentExtra').value,
+        password: document.getElementById('newStudentPassword').value || 'password123'
+      };
+
+      StudentDB.add(studentData);
+      closeAddStudentModal();
+      renderAll();
+      Toast.show(`Student "${studentData.fullName}" added to database!`, 'success');
+
+      // Clear input fields for next entry
+      document.getElementById('newStudentName').value = '';
+      document.getElementById('newStudentEmail').value = '';
+      document.getElementById('newStudentMobile').value = '';
+    }
+
+    function confirmClearDatabase() {
+      if (confirm('Are you sure you want to remove ALL student records from the database? This cannot be undone.')) {
+        AppStore.clearAllStudents();
+        renderAll();
+        Toast.show('All student records have been cleared.', 'info');
+      }
+    }
+
+    function deleteStudentRecord(candidateId) {
+      if (confirm(`Are you sure you want to remove candidate ${candidateId} from institutional records?`)) {
+        AppStore.deleteStudent(candidateId);
+        renderAll();
+        Toast.show('Candidate record deleted.', 'info');
+      }
+    }
+
+    // Render Chart.js Analytics
+    function renderCharts() {
+      document.getElementById('chartCohortN').textContent = currentStudents.length;
+
+      // Chart 1: Distribution
+      const ctx1 = document.getElementById('scoreDistChart').getContext('2d');
+      if (scoreDistChartInstance) scoreDistChartInstance.destroy();
+
+      const brackets = { '>= 90%': 0, '80-89%': 0, '70-79%': 0, '60-69%': 0, '< 60%': 0 };
+      currentStudents.forEach(s => {
+        const score = (s.prediction || MLPredictor.predict(s)).predictedPercentage || 75;
+        if (score >= 90) brackets['>= 90%']++;
+        else if (score >= 80) brackets['80-89%']++;
+        else if (score >= 70) brackets['70-79%']++;
+        else if (score >= 60) brackets['60-69%']++;
+        else brackets['< 60%']++;
+      });
+
+      scoreDistChartInstance = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(brackets),
+          datasets: [{
+            label: 'Students Count',
+            data: Object.values(brackets),
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.75)',
+              'rgba(59, 130, 246, 0.75)',
+              'rgba(99, 102, 241, 0.75)',
+              'rgba(245, 158, 11, 0.75)',
+              'rgba(244, 63, 94, 0.75)'
+            ],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1, precision: 0 }
+            }
+          }
+        }
+      });
+
+      // Chart 2: Branch Comparison
+      const ctx2 = document.getElementById('branchComparisonChart').getContext('2d');
+      if (branchComparisonChartInstance) branchComparisonChartInstance.destroy();
+
+      let branchLabels = [];
+      let branchAverages = [];
+
+      if (currentStudents.length === 0) {
+        branchLabels = ['Computer Science', 'AI & DS', 'Information Tech', 'Electronics Eng'];
+        branchAverages = [0, 0, 0, 0];
+      } else {
+        const branchScores = {};
+        const branchCounts = {};
+        currentStudents.forEach(s => {
+          const b = s.branch || 'General';
+          const sc = (s.prediction || MLPredictor.predict(s)).predictedPercentage || 75;
+          branchScores[b] = (branchScores[b] || 0) + sc;
+          branchCounts[b] = (branchCounts[b] || 0) + 1;
+        });
+
+        branchLabels = Object.keys(branchScores);
+        branchAverages = branchLabels.map(b => (branchScores[b] / branchCounts[b]).toFixed(1));
+      }
+
+      branchComparisonChartInstance = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: branchLabels.map(b => b.length > 15 ? b.substring(0, 15) + '..' : b),
+          datasets: [{
+            label: 'Avg Predicted %',
+            data: branchAverages,
+            backgroundColor: 'rgba(99, 102, 241, 0.75)',
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              min: 0,
+              max: 100,
+              ticks: { stepSize: 20 }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg2)"/>
+  <!-- Ponytail behind -->
+  <path d="M78 40 C95 38 102 56 94 72 C88 64 85 52 78 46 Z" fill="#78350F"/>
+  <circle cx="80" cy="42" r="4" fill="#F43F5E"/>
+  <!-- Top Body -->
+  <path d="M24 120 C24 94 40 84 60 84 C80 84 96 94 96 120 Z" fill="#F43F5E"/>
+  <path d="M50 86 Q60 96 70 86 Z" fill="#FEE2E2"/>
+  <!-- Neck -->
+  <rect x="53" y="70" width="14" height="16" rx="4" fill="#FED7AA"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="54" rx="21" ry="25" fill="#FED7AA"/>
+  <!-- Hair Top & Bangs -->
+  <path d="M38 52 C36 32 46 22 62 22 C78 22 83 32 82 52 C78 38 68 34 52 35 C42 36 39 44 38 52 Z" fill="#78350F"/>
+  <!-- Ears -->
+  <circle cx="39" cy="56" r="4.5" fill="#FDBA74"/>
+  <circle cx="81" cy="56" r="4.5" fill="#FDBA74"/>
+  <!-- Stylish Glasses -->
+  <rect x="44" y="47" width="13" height="10" rx="2.5" stroke="#1E293B" stroke-width="1.8" fill="rgba(255,255,255,0.35)"/>
+  <rect x="63" y="47" width="13" height="10" rx="2.5" stroke="#1E293B" stroke-width="1.8" fill="rgba(255,255,255,0.35)"/>
+  <line x1="57" y1="51" x2="63" y2="51" stroke="#1E293B" stroke-width="1.8"/>
+  <line x1="40" y1="49" x2="44" y2="50" stroke="#1E293B" stroke-width="1.5"/>
+  <line x1="76" y1="50" x2="80" y2="49" stroke="#1E293B" stroke-width="1.5"/>
+  <!-- Eyes -->
+  <circle cx="50.5" cy="52" r="2" fill="#1E293B"/>
+  <circle cx="69.5" cy="52" r="2" fill="#1E293B"/>
+  <!-- Smile -->
+  <path d="M54 64 Q60 69 66 64" stroke="#E11D48" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

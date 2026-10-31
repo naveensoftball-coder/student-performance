@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg3)"/>
+  <!-- Jacket Body -->
+  <path d="M22 120 C22 92 38 82 60 82 C82 82 98 92 98 120 Z" fill="#0F172A"/>
+  <path d="M48 85 L60 120 L72 85 Z" fill="#10B981"/>
+  <!-- Neck -->
+  <rect x="52" y="68" width="16" height="18" rx="4" fill="#E2B07E"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="54" rx="22" ry="26" fill="#E2B07E"/>
+  <!-- Modern Spiky Hair -->
+  <path d="M38 46 C36 30 46 18 60 18 C70 18 82 26 82 46 C80 34 72 26 60 26 C48 26 42 34 38 46 Z" fill="#27272A"/>
+  <path d="M52 18 L56 12 L60 18 L64 13 L68 19" stroke="#27272A" stroke-width="3" stroke-linecap="round" fill="#27272A"/>
+  <!-- Ears -->
+  <circle cx="38" cy="54" r="4.5" fill="#D29B63"/>
+  <circle cx="82" cy="54" r="4.5" fill="#D29B63"/>
+  <!-- Eyes -->
+  <circle cx="52" cy="51" r="2.5" fill="#18181B"/>
+  <circle cx="68" cy="51" r="2.5" fill="#18181B"/>
+  <circle cx="53" cy="50" r="0.8" fill="#FFFFFF"/>
+  <circle cx="69" cy="50" r="0.8" fill="#FFFFFF"/>
+  <!-- Eyebrows -->
+  <path d="M47 45 Q52 43 56 46" stroke="#18181B" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M64 46 Q68 43 73 45" stroke="#18181B" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Smile -->
+  <path d="M53 62 Q60 68 67 62" stroke="#B45309" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+</svg>

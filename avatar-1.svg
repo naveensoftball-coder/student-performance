@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg1)"/>
+  <!-- Hoodie Body -->
+  <path d="M22 120 C22 92 38 82 60 82 C82 82 98 92 98 120 Z" fill="#1E293B"/>
+  <path d="M48 85 L60 102 L72 85 Z" fill="#38BDF8"/>
+  <!-- Neck -->
+  <rect x="52" y="68" width="16" height="18" rx="4" fill="#FBD38D"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="54" rx="22" ry="26" fill="#FBD38D"/>
+  <!-- Hair -->
+  <path d="M38 50 C38 32 44 24 60 24 C76 24 82 32 82 50 C80 40 74 34 60 34 C46 34 40 40 38 50 Z" fill="#18181B"/>
+  <!-- Ears -->
+  <circle cx="38" cy="54" r="5" fill="#F6AD55"/>
+  <circle cx="82" cy="54" r="5" fill="#F6AD55"/>
+  <!-- Eyes -->
+  <circle cx="52" cy="52" r="2.5" fill="#18181B"/>
+  <circle cx="68" cy="52" r="2.5" fill="#18181B"/>
+  <circle cx="53" cy="51" r="0.8" fill="#FFFFFF"/>
+  <circle cx="69" cy="51" r="0.8" fill="#FFFFFF"/>
+  <!-- Eyebrows -->
+  <path d="M48 46 Q52 44 56 46" stroke="#18181B" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M64 46 Q68 44 72 46" stroke="#18181B" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Smile -->
+  <path d="M54 62 Q60 67 66 62" stroke="#C53030" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Headphones -->
+  <path d="M34 54 C34 32 42 22 60 22 C78 22 86 32 86 54" stroke="#F59E0B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <rect x="31" y="46" width="7" height="16" rx="3.5" fill="#D97706"/>
+  <rect x="82" y="46" width="7" height="16" rx="3.5" fill="#D97706"/>
+</svg>

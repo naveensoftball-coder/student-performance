@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg4)"/>
+  <!-- Body / Blazer -->
+  <path d="M24 120 C24 94 40 84 60 84 C80 84 96 94 96 120 Z" fill="#4C1D95"/>
+  <path d="M46 86 L60 108 L74 86 Z" fill="#A78BFA"/>
+  <!-- Neck -->
+  <rect x="53" y="70" width="14" height="16" rx="4" fill="#FCD34D"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="54" rx="21" ry="25" fill="#FCD34D"/>
+  <!-- Bob Haircut -->
+  <path d="M36 56 C34 32 44 20 60 20 C76 20 86 32 84 56 C85 68 83 72 81 72 C78 60 76 34 60 34 C44 34 42 60 39 72 C37 72 35 68 36 56 Z" fill="#172554"/>
+  <!-- Ears -->
+  <circle cx="38" cy="55" r="4" fill="#F59E0B"/>
+  <circle cx="82" cy="55" r="4" fill="#F59E0B"/>
+  <!-- Round Specs -->
+  <circle cx="50" cy="51" r="7" stroke="#E0E7FF" stroke-width="1.8" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="70" cy="51" r="7" stroke="#E0E7FF" stroke-width="1.8" fill="rgba(255,255,255,0.25)"/>
+  <line x1="57" y1="51" x2="63" y2="51" stroke="#E0E7FF" stroke-width="1.8"/>
+  <!-- Eyes -->
+  <circle cx="50" cy="51" r="2" fill="#0F172A"/>
+  <circle cx="70" cy="51" r="2" fill="#0F172A"/>
+  <!-- Smile -->
+  <path d="M54 63 Q60 68 66 63" stroke="#9333EA" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

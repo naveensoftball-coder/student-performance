@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg5)"/>
+  <!-- Graduation Gown Collar -->
+  <path d="M22 120 C22 92 38 82 60 82 C82 82 98 92 98 120 Z" fill="#0F172A"/>
+  <path d="M48 84 L60 106 L72 84 Z" fill="#F59E0B"/>
+  <!-- Neck -->
+  <rect x="52" y="68" width="16" height="18" rx="4" fill="#FBCFE8"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="56" rx="22" ry="25" fill="#FBCFE8"/>
+  <!-- Hair below cap -->
+  <path d="M38 54 C38 42 45 36 60 36 C75 36 82 42 82 54 Z" fill="#312E81"/>
+  <!-- Ears -->
+  <circle cx="38" cy="56" r="4.5" fill="#F472B6"/>
+  <circle cx="82" cy="56" r="4.5" fill="#F472B6"/>
+  <!-- Eyes -->
+  <circle cx="52" cy="54" r="2.5" fill="#1E1B4B"/>
+  <circle cx="68" cy="54" r="2.5" fill="#1E1B4B"/>
+  <circle cx="53" cy="53" r="0.8" fill="#FFFFFF"/>
+  <circle cx="69" cy="53" r="0.8" fill="#FFFFFF"/>
+  <!-- Smile -->
+  <path d="M53 64 Q60 70 67 64" stroke="#BE185D" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <!-- Graduation Cap -->
+  <polygon points="60,20 96,33 60,46 24,33" fill="#1E1B4B"/>
+  <polygon points="60,22 92,33 60,44 28,33" fill="#312E81"/>
+  <rect x="44" y="38" width="32" height="9" rx="2" fill="#1E1B4B"/>
+  <!-- Tassel -->
+  <circle cx="60" cy="33" r="3" fill="#F59E0B"/>
+  <path d="M60 33 C68 34 78 40 80 48" stroke="#F59E0B" stroke-width="2" fill="none"/>
+  <polygon points="78,48 82,48 84,56 76,56" fill="#D97706"/>
+</svg>

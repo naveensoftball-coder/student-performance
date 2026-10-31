@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#B91C1C"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg7)"/>
+  <!-- Body Hoodie -->
+  <path d="M22 120 C22 92 38 82 60 82 C82 82 98 92 98 120 Z" fill="#1E293B"/>
+  <!-- Neck -->
+  <rect x="52" y="68" width="16" height="18" rx="4" fill="#FDE047"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="54" rx="22" ry="26" fill="#FDE047"/>
+  <!-- Backward Cap -->
+  <path d="M38 42 C38 28 46 22 60 22 C74 22 82 28 82 42 Z" fill="#DC2626"/>
+  <path d="M50 22 C48 16 38 18 36 24 C34 28 44 26 50 22 Z" fill="#991B1B"/>
+  <rect x="36" y="40" width="48" height="6" rx="2" fill="#B91C1C"/>
+  <!-- Ears -->
+  <circle cx="38" cy="54" r="4.5" fill="#EAB308"/>
+  <circle cx="82" cy="54" r="4.5" fill="#EAB308"/>
+  <!-- Square Glasses -->
+  <rect x="44" y="47" width="13" height="10" rx="2" stroke="#0F172A" stroke-width="2" fill="rgba(255,255,255,0.4)"/>
+  <rect x="63" y="47" width="13" height="10" rx="2" stroke="#0F172A" stroke-width="2" fill="rgba(255,255,255,0.4)"/>
+  <line x1="57" y1="51" x2="63" y2="51" stroke="#0F172A" stroke-width="2"/>
+  <!-- Eyes -->
+  <circle cx="50.5" cy="52" r="2" fill="#0F172A"/>
+  <circle cx="69.5" cy="52" r="2" fill="#0F172A"/>
+  <!-- Smile with tooth grin -->
+  <path d="M53 63 Q60 69 67 63" stroke="#991B1B" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+</svg>

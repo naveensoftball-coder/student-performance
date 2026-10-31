@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="60" fill="url(#bg6)"/>
+  <!-- Body Hoodie -->
+  <path d="M24 120 C24 94 40 84 60 84 C80 84 96 94 96 120 Z" fill="#4338CA"/>
+  <path d="M50 86 Q60 98 70 86 Z" fill="#C7D2FE"/>
+  <!-- Long Hair Behind -->
+  <path d="M32 50 C30 75 35 96 42 108 C36 94 36 68 38 50 Z" fill="#D97706"/>
+  <path d="M88 50 C90 75 85 96 78 108 C84 94 84 68 82 50 Z" fill="#D97706"/>
+  <!-- Neck -->
+  <rect x="53" y="70" width="14" height="16" rx="4" fill="#FED7AA"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="54" rx="21" ry="25" fill="#FED7AA"/>
+  <!-- Hair Front -->
+  <path d="M36 48 C34 26 46 20 60 20 C74 20 86 26 84 48 C80 34 72 28 60 28 C48 28 40 34 36 48 Z" fill="#B45309"/>
+  <!-- Cute Headband -->
+  <path d="M38 42 C44 26 76 26 82 42" stroke="#EC4899" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Ears -->
+  <circle cx="39" cy="55" r="4" fill="#FDBA74"/>
+  <circle cx="81" cy="55" r="4" fill="#FDBA74"/>
+  <!-- Eyes with Lashes -->
+  <circle cx="51" cy="52" r="2.2" fill="#1E1B4B"/>
+  <circle cx="69" cy="52" r="2.2" fill="#1E1B4B"/>
+  <circle cx="52" cy="51" r="0.7" fill="#FFFFFF"/>
+  <circle cx="70" cy="51" r="0.7" fill="#FFFFFF"/>
+  <!-- Smile -->
+  <path d="M54 63 Q60 68 66 63" stroke="#BE185D" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>
